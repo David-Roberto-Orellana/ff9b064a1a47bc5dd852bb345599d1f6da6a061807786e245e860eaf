@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package EJB;
 
 import Entity.Clientes;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.eclipse.persistence.exceptions.QueryException;
 
 /**
  *
@@ -32,26 +29,25 @@ public class ClientesFacade extends AbstractFacade<Clientes> implements Clientes
     }
 
     @Override
-    public int Last_id() {
-        int id = 0;
-        String sql = "SELECT c FROM Clientes c "
-                + "ORDER BY c.idClientes DESC";
+    public List<Clientes> consultaApartes() {
+        String sql = "SELECT c "
+                + "FROM "
+                + "     Clientes c "
+                + "     LEFT JOIN Extranjeros AS e ON c.idClientes = e.idExtranjero "
+                + "WHERE "
+                + "     e.idExtranjero IS NULL";
+        List<Clientes> lista = new LinkedList();
         try {
-            Query q = em.createQuery(sql);
-            List<Clientes> lista= q.getResultList();
-            if (!lista.isEmpty()) {
-                id = lista.get(0).getIdClientes();
-            }
-        } catch (Exception e) {
-            
-            System.out.println("*********************************************");
-            System.out.println("*********************************************");
-            System.out.println("Error al ejecutar Last_id");
-            System.out.println(e);
-            System.out.println("*********************************************");
-            System.out.println("*********************************************");
+            Query query = em.createQuery(sql);
+            lista = query.getResultList();
+            return lista;
+        } catch (QueryException e) {
+            System.out.println("************************");
+            System.out.println("************************");
+            System.out.println("************************");
+            System.out.println("Error de Clientes Facade consulra Apartes");
+            System.out.println("Error: " + e);
+            return lista;
         }
-        return id;
-        }
-
     }
+}

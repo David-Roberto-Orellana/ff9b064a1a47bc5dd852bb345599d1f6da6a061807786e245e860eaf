@@ -1,5 +1,4 @@
 package Controllers;
-
 import EJB.ReparacionesFacadeLocal;
 import Entity.Partes;
 import Entity.Reparaciones;
@@ -8,144 +7,100 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-
-@Named(value = "")
 @ManagedBean
 @SessionScoped
-public class managedReparaciones implements Serializable {
-
-    String mjs;
+public class managedReparaciones extends zumbi implements Serializable {
     @EJB
     private ReparacionesFacadeLocal reparacionesFacade;
     private List<Reparaciones> listaReparaciones;
     private Reparaciones reparaciones;
     private Vehiculos vehiculos;
     private Partes partes;
-
     public List<Reparaciones> getListaReparaciones() {
         this.listaReparaciones = this.reparacionesFacade.findAll();
-        return listaReparaciones;
+        return this.listaReparaciones;
     }
-
     public void setListaReparaciones(List<Reparaciones> listaReparaciones) {
         this.listaReparaciones = listaReparaciones;
     }
-
     public Reparaciones getReparaciones() {
-        return reparaciones;
+        return this.reparaciones;
     }
-
     public void setReparaciones(Reparaciones reparaciones) {
         this.reparaciones = reparaciones;
     }
-
     public Vehiculos getVehiculos() {
-        return vehiculos;
+        return this.vehiculos;
     }
-
     public void setVehiculos(Vehiculos vehiculos) {
         this.vehiculos = vehiculos;
     }
-
     public Partes getPartes() {
-        return partes;
+        return this.partes;
     }
-
     public void setPartes(Partes partes) {
         this.partes = partes;
     }
-
     @PostConstruct
     public void init() {
-        this.reparaciones = new Reparaciones();
-        this.vehiculos = new Vehiculos();
-        this.partes = new Partes();
-        this.reparaciones.setIdReparacion(0);
+        this.limpiar();
     }
-
     public void consultar() {
         try {
-            listaReparaciones = reparacionesFacade.findAll();
+            this.listaReparaciones = this.reparacionesFacade.findAll();
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al cargar reparaciones");
         }
     }
-
     public void consultarById(Reparaciones re) {
         try {
-            this.partes.setIdParte(re.getIdParte().getIdParte());
             this.vehiculos.setIdVehiculo(re.getIdVehiculo().getIdVehiculo());
-            this.reparaciones.setIdVehiculo(re.getIdVehiculo());
-            this.reparaciones.setIdParte(re.getIdParte());
-            reparaciones.setIdReparacion(re.getIdReparacion());
+            this.partes.setIdParte(re.getIdParte().getIdParte());
             this.reparaciones = re;
         } catch (Exception e) {
-        }
-    }
-
-    public void guardar() {
-        try {
-
-            this.reparaciones.setIdVehiculo(vehiculos);
-            this.reparaciones.setIdParte(partes);
-            this.reparacionesFacade.create(reparaciones);
-            this.reparaciones = new Reparaciones();
-            this.vehiculos = new Vehiculos();
-            this.partes = new Partes();
-            this.mjs = "Guardado Correctamente";
-        } catch (Exception e) {
-            this.mjs = "Error" + e.getMessage();
             e.printStackTrace();
+            this.msj("Error al cargar reparacion");
         }
-        FacesMessage msg = new FacesMessage(this.mjs);
-        FacesContext.getCurrentInstance().addMessage(mjs, msg);
     }
-
     public void actualizar() {
         try {
-            this.reparaciones.setIdVehiculo(vehiculos);
-            this.reparaciones.setIdParte(partes);
-            reparacionesFacade.edit(reparaciones);
-
-            this.mjs = "Actualizado Correctamente";
+            this.reparaciones.setIdVehiculo(this.vehiculos);
+            this.reparaciones.setIdParte(this.partes);
+            this.reparacionesFacade.edit(this.reparaciones);
+            this.msj("Reparacion actualizada");
         } catch (Exception e) {
-            this.mjs = "Error al Actualizar";
             e.printStackTrace();
+            this.msj("Error al actualizar reparacion");
         }
-        FacesMessage msg = new FacesMessage(this.mjs);
-        FacesContext.getCurrentInstance().addMessage(mjs, msg);
     }
-
-    /*public void insertar() {
+    public void insertar() {
         try {
-            reparacionesFacade.create(reparaciones);
-            this.mjs = "Actualizado Correctamente";
+            this.reparaciones.setIdVehiculo(this.vehiculos);
+            this.reparaciones.setIdParte(this.partes);
+            this.reparacionesFacade.create(this.reparaciones);
+            this.msj("Reparacion insertada");
         } catch (Exception e) {
-            this.mjs = "Error al Actualizar";
+            e.printStackTrace();
+            this.msj("Error al insertar reparacion");
         }
-        FacesMessage msg = new FacesMessage(this.mjs);
-        FacesContext.getCurrentInstance().addMessage(mjs, msg);
-    } */
+    } 
     public void eliminar(Reparaciones repa) {
         this.reparaciones = repa;
         try {
-            this.reparacionesFacade.remove(reparaciones);
-            listaReparaciones = reparacionesFacade.findAll();
-            this.mjs = "Eliminado Correctamente";
+            this.reparacionesFacade.remove(this.reparaciones);
+            this.msj("Reparacion eliminada");
         } catch (Exception e) {
-            this.mjs = "Error al eliminar" +e;
             e.printStackTrace();
+            this.msj("Error al eliminar reparacion");
         }
-        FacesMessage msg = new FacesMessage(this.mjs);
-        FacesContext.getCurrentInstance().addMessage(mjs, msg);
     }
-
     public void limpiar() {
         this.reparaciones = new Reparaciones();
+        this.vehiculos = new Vehiculos();
+        this.partes = new Partes();
         this.reparaciones.setIdReparacion(0);
     }
 }

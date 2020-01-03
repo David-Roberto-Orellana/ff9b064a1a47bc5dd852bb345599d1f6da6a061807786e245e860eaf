@@ -24,6 +24,37 @@ public class managedExtrajeros implements Serializable {
     private List<Extranjeros> listaextranjero;
     private Extranjeros extranjeros;
 
+    @EJB
+    private ClientesFacadeLocal clientesEJBFacadeLocal;
+    private List<Clientes> listaClientes;
+    private List<Clientes> listaClientesApartes;
+    private Clientes clietnes;
+
+    public List<Clientes> getListaClientes() {
+        this.listaClientes = this.clientesEJBFacadeLocal.findAll();
+        return listaClientes;
+    }
+
+    public List<Clientes> getListaClientesApartes() {
+        this.listaClientesApartes = this.clientesEJBFacadeLocal.consultaApartes();
+        return listaClientesApartes;
+    }
+
+    public void setListaClientesApartes(List<Clientes> listaClientesApartes) {
+        this.listaClientesApartes = listaClientesApartes;
+    }
+
+    public void setListaClientes(List<Clientes> listaClientes) {
+        this.listaClientes = listaClientes;
+    }
+
+    public Clientes getClietnes() {
+        return clietnes;
+    }
+
+    public void setClietnes(Clientes clietnes) {
+        this.clietnes = clietnes;
+    }
 
     public List<Extranjeros> getListaextranjero() {
         this.listaextranjero = this.ExtranjerosEJBFacadeLocal.findAll();
@@ -44,7 +75,7 @@ public class managedExtrajeros implements Serializable {
 
     @PostConstruct
     private void init() {
-        extranjeros = new Extranjeros();
+        this.limpiar();
     }
 
     public void consultar_extranjeros() {
@@ -57,8 +88,9 @@ public class managedExtrajeros implements Serializable {
 
     public void insertar_extranjeros() {
         try {
+            this.extranjeros.setClientes(clietnes);
+            this.extranjeros.setIdExtranjero(this.clietnes.getIdClientes());
             ExtranjerosEJBFacadeLocal.create(extranjeros);
-            extranjeros = new Extranjeros();
             this.mensaje = "Insertado Correctamente";
         } catch (Exception e) {
             this.mensaje = "Error al Insertar";
@@ -77,8 +109,8 @@ public class managedExtrajeros implements Serializable {
 
     public void actualizar_extranjeros() {
         try {
+            this.extranjeros.setClientes(clietnes);
             ExtranjerosEJBFacadeLocal.edit(extranjeros);
-            extranjeros = new Extranjeros();
             this.mensaje = "Actualizado Correctamente";
         } catch (Exception e) {
             this.mensaje = "Error al Actualizado";
@@ -101,6 +133,8 @@ public class managedExtrajeros implements Serializable {
 
     public void limpiar() {
         extranjeros = new Extranjeros();
+        clietnes = new Clientes();
+        extranjeros.setIdExtranjero(0);
     }
 
 }

@@ -1,6 +1,4 @@
 package Controllers;
-
-import EJB.MarcasFacadeLocal;
 import EJB.ModelosFacadeLocal;
 import Entity.Marcas;
 import Entity.Modelos;
@@ -9,128 +7,88 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-
 @Named(value = "managedModelos")
 @SessionScoped
-public class managedModelos implements Serializable {
-
-    
-
+public class managedModelos extends zumbi implements Serializable {
     @EJB
     private ModelosFacadeLocal modelosFacadeLocal;
     private List<Modelos> listaModelos;
     private Modelos modelos;
-
-    @EJB
-    private MarcasFacadeLocal marcaEJB;  
-    private List<Marcas> listaMarcas;
     private Marcas marcas;
-
-String mensaje;
     public List<Modelos> getListaModelos() {
-    listaModelos = modelosFacadeLocal.findAll();
-        return listaModelos;
+        this.listaModelos = this.modelosFacadeLocal.findAll();
+        return this.listaModelos;
     }
-
     public void setListaModelos(List<Modelos> listaModelos) {
         this.listaModelos = listaModelos;
     }
-
-    public List<Marcas> getListaMarcas() {
-        listaMarcas = marcaEJB.findAll();
-        return listaMarcas;
-    }
-
-    public void setListaMarcas(List<Marcas> listaMarcas) {
-        this.listaMarcas = listaMarcas;
-    }
-
     public Modelos getModelos() {
-        return modelos;
+        return this.modelos;
     }
-
     public void setModelos(Modelos modelos) {
         this.modelos = modelos;
     }
-
     public Marcas getMarcas() {
-        return marcas;
+        return this.marcas;
     }
-
     public void setMarcas(Marcas marcas) {
         this.marcas = marcas;
     }
-
     @PostConstruct
     public void init() {
-        this.modelos = new Modelos();
-        this.marcas = new Marcas();
-        modelos.setIdModelo(0);
-       
+        this.limpiar_Modelos();
     }
-
     public void consultar_modelos() {
         try {
             this.modelosFacadeLocal.findAll();
         } catch (Exception e) {
-      
+            e.printStackTrace();
+            this.msj("Error al cargar modelos");
         }
-       
     }
-
-    public void insertar_vehiculos() {
+    public void insertar_modelos() {
         try {
-            modelos.setIdMarca(marcas);
-            modelosFacadeLocal.create(modelos);
-            this.mensaje = "Insertado Correctamente";
+            this.modelos.setIdMarca(this.marcas);
+            this.modelosFacadeLocal.create(this.modelos);
+            this.msj("Modelo insertado");
         } catch (Exception e) {
-            this.mensaje = "Error al Insertar";
+            e.printStackTrace();
+            this.msj("Error al insertar modelo");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-
-    public void actualizar_vehiculos() {
+    public void actualizar_modelos() {
         try {
-            this.modelos.setIdMarca(marcas);
-            modelosFacadeLocal.edit(modelos);
-            this.modelos=new Modelos();
-            this.marcas=new Marcas();
-            this.mensaje = "Actualizado Correctamente";
+            this.modelos.setIdMarca(this.marcas);
+            this.modelosFacadeLocal.edit(this.modelos);
+            this.msj("Modelo actualizado");
         } catch (Exception e) {
-            this.mensaje = "Error al Actualizar";
+            e.printStackTrace();
+            this.msj("Error al actualizar modelo");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-
-    public void eliminar_vehiculos(Modelos mod) {
-        this.modelos=mod;
+    public void eliminar_modelos(Modelos mod) {
+        this.modelos = mod;
         try {
-            modelosFacadeLocal.remove(modelos);
-            listaModelos = modelosFacadeLocal.findAll();
-            this.mensaje = "Eliminado Correctamente";
+            this.modelosFacadeLocal.remove(this.modelos);
+            this.msj("Modelo eliminado");
         } catch (Exception e) {
-            this.mensaje = "Error al Eliminar";
+            e.printStackTrace();
+            this.msj("Error al eliminar modelo");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-
-    public void consultarID_vehiculos(Modelos mod) {
+    public void consultarID_modelos(Modelos mod) {
         try {
             this.marcas.setIdMarca(mod.getIdMarca().getIdMarca());
             this.modelos = mod;
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al cargar modelo");
         }
     }
-    
-     public void limpiar_Modelos() {
+    public void limpiar_Modelos() {
         this.modelos = new Modelos();
+        this.marcas = new Marcas();
         modelos.setIdModelo(0);
     }
-
 }

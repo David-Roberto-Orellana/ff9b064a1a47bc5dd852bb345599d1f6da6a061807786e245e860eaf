@@ -1,107 +1,86 @@
 package Controllers;
-
 import EJB.LicenciasFacadeLocal;
 import Entity.Licencias;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-
+/**
+ * 
+ * @author silvia.ungo
+ */
 @Named(value = "managedLicencias")
 @SessionScoped
-public class managedLicencias implements Serializable {
-
-    String mensaje;
-
+public class managedLicencias extends zumbi implements Serializable {
     @EJB
     private LicenciasFacadeLocal licenciaEJBFacadeLocal;
-    private List<Licencias> listalicencia = null;
+    private List<Licencias> listalicencia;
     private Licencias licencias;
-
     public List<Licencias> getListalicencia() {
         this.listalicencia = this.licenciaEJBFacadeLocal.findAll();
-        return listalicencia;
+        return this.listalicencia;
     }
-
     public void setListalicencia(List<Licencias> listalicencia) {
         this.listalicencia = listalicencia;
     }
-
     public Licencias getLicencias() {
-        return licencias;
+        return this.licencias;
     }
-
     public void setLicencias(Licencias licencias) {
         this.licencias = licencias;
     }
-
     @PostConstruct
-    private void init() {
-        licencias = new Licencias();
-    this.licencias.setIdLicencia(0);
+    public void init() {
+        this.limpiar();
     }
-
     public void consultar_licencias() {
         try {
-            listalicencia = licenciaEJBFacadeLocal.findAll();
+            this.listalicencia = this.licenciaEJBFacadeLocal.findAll();
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("No se completo la carga de licencias");
         }
-
     }
-
     public void insertar_licencias() {
         try {
-            licenciaEJBFacadeLocal.create(licencias);
-            this.mensaje = "Insertado Correctamente";
+            this.licenciaEJBFacadeLocal.create(this.licencias);
+            this.msj("Licencia insertada");
         } catch (Exception e) {
-            this.mensaje = "Error al Insertar";
+            e.printStackTrace();
+            this.msj("Error al insertar licencia");
         }
-        FacesMessage msg = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msg);
-
     }
-
     public void consultarId_licencias(Licencias licencia) {
         try {
             this.licencias = licencia;
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al cargar los datos de la licencia");
         }
     }
-
     public void actualizar_licencias() {
         try {
-            licenciaEJBFacadeLocal.edit(licencias);
-            this.mensaje = "Actualizado Correctamente";
+            this.licenciaEJBFacadeLocal.edit(this.licencias);
+            this.msj("Licencia actualizada");
         } catch (Exception e) {
-            this.mensaje = "Error al Actualizar";
+            e.printStackTrace();
+            this.msj("Error al actualizar licencia");
         }
-        FacesMessage msg = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msg);
-
     }
-
     public void eliminar_licencias(Licencias licencia) {
         this.licencias = licencia;
         try {
-            licenciaEJBFacadeLocal.remove(licencias);
-            listalicencia = licenciaEJBFacadeLocal.findAll();
-            this.mensaje = "Eliminado Correctamente";
+            this.licenciaEJBFacadeLocal.remove(this.licencias);
+            this.msj("Licencia eliminada");
         } catch (Exception e) {
-            this.mensaje = "Error al Eliminar";
+            e.printStackTrace();
+            this.msj("Error al eliminar licencia");
         }
-         FacesMessage msg = new FacesMessage(this.mensaje);
-         FacesContext.getCurrentInstance().addMessage(mensaje, msg);
     }
-
-    
-    public void limpiar(){
-    this.licencias = new Licencias();
-    this.licencias.setIdLicencia(0);
-    
+    public void limpiar() {
+        this.licencias = new Licencias();
+        this.licencias.setIdLicencia(0);
     }
-    
 }

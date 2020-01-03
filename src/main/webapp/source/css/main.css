@@ -1,0 +1,105 @@
+*{
+    -webkit-user-select: none;
+    outline: none;
+    padding: 0px;
+    margin: 0px;
+}
+body{
+    display: none;
+    opacity: 0;
+    overflow-y: scroll;
+}
+body::-webkit-scrollbar{
+    width: 0px;
+}
+body{
+    -webkit-transition: all 0.5s;
+}
+h1 { 
+    font-family: Oswald; 
+    font-size: 24px; 
+    font-style: normal; 
+    font-variant: normal; font-weight: 700; 
+    line-height: 26.4px; 
+} 
+h3 { 
+    font-family: Oswald; 
+    font-size: 14px; 
+    font-style: normal; 
+    font-variant: normal; 
+    font-weight: 700; 
+    line-height: 15.4px; 
+} 
+p { 
+    font-family: Oswald; 
+    font-size: 14px; 
+    font-style: normal; 
+    font-variant: normal; 
+    font-weight: 400; 
+    line-height: 20px; 
+} 
+blockquote { 
+    font-family: Oswald; 
+    font-size: 21px; 
+    font-style: normal; 
+    font-variant: normal; 
+    font-weight: 400; 
+    line-height: 30px; 
+} 
+pre { 
+    font-family: Oswald; 
+    font-size: 13px; 
+    font-style: normal; 
+    font-variant: normal; 
+    font-weight: 400; 
+    line-height: 18.5714px; 
+}
+button{
+    font-family: Oswald;
+    font-size: 12px;
+}
+.ocultadoFecha{
+    left: -100%;
+    opacity: 0;
+}
+.mostradoFecha{
+    left: 0%;
+    opacity: 1;
+}
+#FechaZumbiAnio{
+    z-index: 1000;
+}
+#FechaZumbiMes{
+    z-index: 1100;
+}
+#FechaZumbiDIa{
+    z-index: 1200;
+}
+#FechaZumbiAnio, #FechaZumbiMes, #FechaZumbiDIa{
+    position: fixed;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    background: url('../img/fechaW.jpg')no-repeat center center #333;
+    background-size: cover;
+    overflow-y: scroll;
+    -webkit-transition: all 0.5s;
+}
+#FechaZumbiAnio::-webkit-scrollbar, #FechaZumbiMes::-webkit-scrollbar,
+        #FechaZumbiDIa::-webkit-scrollbar{
+    width: 0px;
+}
+#FechaZumbiAnio button, #FechaZumbiMes button, #FechaZumbiDIa button{
+    margin: 0.5%;
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid white;
+    color: white;
+    padding: 20px;
+    font-size: 20px;
+    -webkit-transition: all 0.5s;
+    cursor: default;
+    border-radius: 10px;
+}
+#FechaZumbiAnio section, #FechaZumbiMes section, #FechaZumbiDIa section{
+    overflow: hidden;
+}

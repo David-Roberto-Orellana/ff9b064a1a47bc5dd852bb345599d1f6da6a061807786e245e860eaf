@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Entity;
-
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -24,7 +18,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
 /**
  *
  * @author cesar.murciausam
@@ -39,7 +32,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Historiales.findByFechaFin", query = "SELECT h FROM Historiales h WHERE h.fechaFin = :fechaFin")
     , @NamedQuery(name = "Historiales.findByPrecio", query = "SELECT h FROM Historiales h WHERE h.precio = :precio")})
 public class Historiales implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,101 +60,79 @@ public class Historiales implements Serializable {
     private Vehiculos idVehiculo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idHistorial")
     private List<Moras> morasList;
-
-    public Historiales() {
-    }
-
+    public Historiales() {}
     public Historiales(Integer idHistorial) {
         this.idHistorial = idHistorial;
     }
-
     public Historiales(Integer idHistorial, String fechaInicio, String fechaFin, double precio) {
         this.idHistorial = idHistorial;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.precio = precio;
     }
-
     public Integer getIdHistorial() {
         return idHistorial;
     }
-
     public void setIdHistorial(Integer idHistorial) {
         this.idHistorial = idHistorial;
     }
-
     public String getFechaInicio() {
         return fechaInicio;
     }
-
     public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
-
     public String getFechaFin() {
         return fechaFin;
     }
-
     public void setFechaFin(String fechaFin) {
         this.fechaFin = fechaFin;
     }
-
     public double getPrecio() {
         return precio;
     }
-
     public void setPrecio(double precio) {
         this.precio = precio;
     }
-
     public Extranjeros getIdExtranjero() {
         return idExtranjero;
     }
-
     public void setIdExtranjero(Extranjeros idExtranjero) {
         this.idExtranjero = idExtranjero;
     }
-
     public Vehiculos getIdVehiculo() {
         return idVehiculo;
     }
-
     public void setIdVehiculo(Vehiculos idVehiculo) {
         this.idVehiculo = idVehiculo;
     }
-
     @XmlTransient
     public List<Moras> getMorasList() {
         return morasList;
     }
-
     public void setMorasList(List<Moras> morasList) {
         this.morasList = morasList;
     }
-
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (idHistorial != null ? idHistorial.hashCode() : 0);
         return hash;
     }
-
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Historiales)) {
             return false;
         }
         Historiales other = (Historiales) object;
-        if ((this.idHistorial == null && other.idHistorial != null) || (this.idHistorial != null && !this.idHistorial.equals(other.idHistorial))) {
+        if ((this.idHistorial == null && other.idHistorial != null) || 
+                (this.idHistorial != null && !this.idHistorial.equals(other.idHistorial))) {
             return false;
         }
         return true;
     }
-
     @Override
     public String toString() {
         return "EJB.Historiales[ idHistorial=" + idHistorial + " ]";
     }
-    
 }

@@ -17,7 +17,7 @@ import javax.inject.Named;
 
 @Named(value = "managedClientes")
 @SessionScoped
-public class managedClientes implements Serializable {
+public class managedClientes extends zumbi implements Serializable {
 
     String mensaje;
 
@@ -31,27 +31,9 @@ public class managedClientes implements Serializable {
     private Licencias licencias;
     private List<Licencias> listaLicencias;
 
-    @EJB
-    private ExtranjerosFacadeLocal ExtranjerosEJBFacadeLocal;
-    private List<Extranjeros> listaextranjero;
-    private Extranjeros extranjeros;
+    
 
-    public List<Extranjeros> getListaextranjero() {
-        listaextranjero = ExtranjerosEJBFacadeLocal.findAll();
-        return listaextranjero;
-    }
-
-    public void setListaextranjero(List<Extranjeros> listaextranjero) {
-        this.listaextranjero = listaextranjero;
-    }
-
-    public Extranjeros getExtranjeros() {
-        return extranjeros;
-    }
-
-    public void setExtranjeros(Extranjeros extranjeros) {
-        this.extranjeros = extranjeros;
-    }
+   
 
     public List<Licencias> getListaLicencias() {
         listaLicencias = licenciasFacadeLocal.findAll();
@@ -96,85 +78,64 @@ public class managedClientes implements Serializable {
     }
 
     @PostConstruct
-    private void init() {
-        clientes = new Clientes();
-        licencias = new Licencias();
-        extranjeros = new Extranjeros();
-        clientes.setIdClientes(0);
+    public void init() {
+        this.limpiar_Clientes();
+        
     }
 
     public void consultar_clientes() {
         try {
-            listacliente = clientesEJBFacadeLocal.findAll();
+            this.clientesEJBFacadeLocal.findAll();
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al cargar clientes");
         }
 
     }
 
     public void insertar_clientes() {
         try {
-            clientes.setIdLicencia(licencias);
-            clientesEJBFacadeLocal.create(clientes);
-            extranjeros.setIdExtranjero(clientesEJBFacadeLocal.Last_id());
-            System.out.println("******************************************" + clientesEJBFacadeLocal.Last_id());
-            ExtranjerosEJBFacadeLocal.create(extranjeros);
-            clientes = new Clientes();
-            licencias = new Licencias();
-            extranjeros = new Extranjeros();
-            this.mensaje = "Insertado Correctamente";
+            this.clientes.setIdLicencia(this.licencias);
+            this.clientesEJBFacadeLocal.create(this.clientes);
+           
+            
+            this.msj("Cliente insertado");
         } catch (Exception e) {
-            this.mensaje = "Error al Insertar";
+            e.printStackTrace();
+            this.msj("Error al insertar cliente");
         }
-        FacesMessage msg = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msg);
-        init();
+        
     }
 
     public void consultarId_clientes(Clientes cliente) {
         try {
             this.licencias.setIdLicencia(cliente.getIdLicencia().getIdLicencia());
-            this.extranjeros.setIdExtranjero(cliente.getExtranjeros().getIdExtranjero());
             this.clientes = cliente;
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al cargar cliente");
         }
     }
 
-    public void actualizar_clientes() {
+   public void actualizar_clientes() {
         try {
-            clientes.setIdLicencia(licencias);
-            clientesEJBFacadeLocal.edit(clientes);
-            listacliente = clientesEJBFacadeLocal.findAll();
-            clientes = new Clientes();
-            licencias = new Licencias();
-            extranjeros = new Extranjeros();
-            this.mensaje = "Actualizado Correctamente";
+            this.clientes.setIdLicencia(this.licencias);
+            this.clientesEJBFacadeLocal.edit(this.clientes);
+           
+            
+            this.msj("Cliente Actualizado");
         } catch (Exception e) {
-            this.mensaje = "Error al Actualizar";
+            e.printStackTrace();
+            this.msj("Error al Actualizar cliente");
         }
-        FacesMessage msg = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msg);
-        init();
+        
     }
 
-    public void eliminar(Clientes cliente) {
-        try {
-            clientes = cliente;
-            this.clientesEJBFacadeLocal.remove(clientes);
-            listacliente = clientesEJBFacadeLocal.findAll();
-            this.mensaje = "Eliminado Correctamente";
-        } catch (Exception e) {
-            this.mensaje = "Error al Eliminar";
-        }
-        FacesMessage msg = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msg);
-        init();
-    }
-
-    public void limpiar() {
-        clientes = new Clientes();
+   
+    public void limpiar_Clientes() {
+        this.clientes = new Clientes();
+        this.licencias = new Licencias();
         clientes.setIdClientes(0);
-        FacesMessage msg = new FacesMessage("Limpieza completa");
-        FacesContext.getCurrentInstance().addMessage("limpieza", msg);
     }
 
 }

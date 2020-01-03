@@ -1,5 +1,4 @@
 package Controllers;
-
 import EJB.PartesFacadeLocal;
 import Entity.Partes;
 import java.io.Serializable;
@@ -7,97 +6,77 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-
 @Named(value = "managedPartes")
 @SessionScoped
-public class managedPartes implements Serializable {
-
-    String mensaje;
-
+public class managedPartes extends zumbi implements Serializable {
     @EJB
     private PartesFacadeLocal partesFacadeLocal; 
     private List<Partes> listaPartes = null;
     private Partes partes;
-
     public List<Partes> getListaPartes() {
         this.listaPartes = this.partesFacadeLocal.findAll();
         return listaPartes;
     }
-
     public void setListaPartes(List<Partes> listaPartes) {
         this.listaPartes = listaPartes;
     }
-
     public Partes getPartes() {
-        return partes;
+        return this.partes;
     }
-
     public void setPartes(Partes partes) {
         this.partes = partes;
     }
-
     @PostConstruct
-    private void init() {
-        partes = new Partes();
-        
-        
+    public void init() {
+        this.limpiar();
     }
-
     public void insertar_parte() {
         try {
-            partesFacadeLocal.create(partes);
-           this. mensaje = "Datos Insertados con Exito";
+            this.partesFacadeLocal.create(this.partes);
+            this.msj("Parte insertada");
         } catch (Exception e) {
-            this. mensaje = "Error al Insertar Datos";
+            e.printStackTrace();
+            this.msj("Error al insertar parte");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-
     public void consultarId_partes(Partes p) {
         try {
             this.partes = p;
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al cargar parte");
         }
     }
-    
     public void actualizar_parte() {
         try {
-            partesFacadeLocal.edit(partes);
-            this. mensaje = "Datos Actualizados con Exito";
+            this.partesFacadeLocal.edit(this.partes);
+            this.msj("Parte actualizada");
         } catch (Exception e) {
-            this. mensaje = "Error al Actualizar Datos";
+            e.printStackTrace();
+            this.msj("Error al actualizar parte");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-
     public void consultar_parte() {
-           try {
-            listaPartes = partesFacadeLocal.findAll();
+        try {
+            this.listaPartes = this.partesFacadeLocal.findAll();
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al mostrar partes");
         }
     }
-
     public void eliminar_parte(Partes p) {
         this.partes= p;
         try {
-            partesFacadeLocal.remove(partes);
-            this.listaPartes = partesFacadeLocal.findAll();
-            this.mensaje = "Datos Eliminados con Exito";
+            this.partesFacadeLocal.remove(this.partes);
+            this.msj("Parte eliminada");
         } catch (Exception e) {
-            this.mensaje = "Error al Eliminar Datos";
+            e.printStackTrace();
+            this.msj("Error al eliminar parte");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-    
     public void limpiar(){
-        this.partes=new Partes();
+        this.partes = new Partes();
         this.partes.setIdParte(0);
     }
-    
 }

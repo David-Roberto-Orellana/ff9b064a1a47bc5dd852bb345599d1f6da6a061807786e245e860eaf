@@ -1,0 +1,81 @@
+.alertify .ajs-dialog {
+    background-color: rgba(255, 255, 255, 0.7);
+    -webkit-box-shadow: 0px 15px 20px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 15px 20px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 20px rgb(20, 22, 25);
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: rgb(20, 22, 25);
+}
+.alertify .ajs-header {
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0);
+    border-bottom: none;
+    color: white;
+}
+.alertify .ajs-body {
+    color: white;
+}
+.alertify .ajs-body .ajs-content .ajs-input {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin: 4px;
+    border-radius: 2px;
+    border: 1px solid #CCC;
+}
+.alertify .ajs-body .ajs-content p {
+    margin: 0;
+}
+.alertify .ajs-footer {
+    background-color: rgba(255, 255, 255, 0);
+    border-top: none;
+    border-radius: 0 0 2px 2px;
+}
+.alertify .ajs-footer .ajs-buttons .ajs-button {
+    background-color: transparent;
+    color: #000;
+    border: 0;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.alertify .ajs-footer .ajs-buttons .ajs-button.ajs-ok, 
+        .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-cancel {
+    color: #3498DB;
+}
+.alertify-notifier .ajs-message {
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+    text-align: center;
+    border: solid 1px #ddd;
+    border-radius: 2px;
+}
+.alertify-notifier .ajs-message.ajs-success {
+    background: rgba(91, 189, 114, 0.9);
+    color: white;
+    text-shadow: 0px 0px 3px black;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px gray;
+    border: none;
+    transform: rotate(5deg);
+}
+.alertify-notifier .ajs-message.ajs-error {
+    color: white;
+    background: crimson;
+    text-shadow: 0px 0px 3px black;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px gray;
+    border: none;
+    transform: rotate(5deg);
+    opacity: 0.9;
+}
+.alertify-notifier .ajs-message.ajs-warning {
+    background: rgba(252, 248, 215, 0.9);
+    color: black;
+    text-shadow: 0px 0px 3px black;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px gray;
+    border: none;
+    transform: rotate(5deg);
+}

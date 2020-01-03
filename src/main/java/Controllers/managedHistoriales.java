@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controllers;
-
 import EJB.HistorialesFacadeLocal;
 import Entity.Extranjeros;
 import Entity.Historiales;
@@ -14,124 +8,92 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-
-/**
- *
- * @author azucena.rivasusam
- */
 @Named(value = "managedHistoriales")
 @SessionScoped
-public class managedHistoriales implements Serializable {
-    
-    String mensaje;
+public class managedHistoriales extends zumbi implements Serializable {
     @EJB
     private HistorialesFacadeLocal historialesFacadeLocal;
-    private List<Historiales> listaHistoriales = null;
+    private List<Historiales> listaHistoriales;
     private Historiales historiales;
     private Extranjeros extranjeros;
     private Vehiculos vehiculos;
-
-
     public List<Historiales> getListaHistoriales() {
-        this.listaHistoriales=this.historialesFacadeLocal.findAll();
-        return listaHistoriales;
+        this.listaHistoriales = this.historialesFacadeLocal.findAll();
+        return this.listaHistoriales;
     }
-
     public void setListaHistoriales(List<Historiales> listaHistoriales) {
         this.listaHistoriales = listaHistoriales;
     }
-
     public Historiales getHistoriales() {
-        return historiales;
+        return this.historiales;
     }
-
     public void setHistoriales(Historiales historiales) {
         this.historiales = historiales;
     }
-
     public Extranjeros getExtranjeros() {
-        return extranjeros;
+        return this.extranjeros;
     }
-
     public void setExtranjeros(Extranjeros extranjeros) {
         this.extranjeros = extranjeros;
     }
-
     public Vehiculos getVehiculos() {
-        return vehiculos;
+        return this.vehiculos;
     }
-
     public void setVehiculos(Vehiculos vehiculos) {
         this.vehiculos = vehiculos;
     }
-    
-
-    
     @PostConstruct
-    private void init() {
-        historiales = new Historiales();
-        this.historiales.setIdHistorial(0);
+    public void init() {
+        this.limpiar();
     }
-    
     public void consultar_historiales(){
         try {
-            listaHistoriales = historialesFacadeLocal.findAll();
-            
+            this.listaHistoriales = this.historialesFacadeLocal.findAll();
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("No se pudo cargar el historial");
         }
-    
     }
-    
     public void insertar_historiales(){
         try {
-            historialesFacadeLocal.create(historiales);
-            this.mensaje ="Insertado Correctamente";
+            this.historialesFacadeLocal.create(this.historiales);
+            this.msj("Historial insertado");
         } catch (Exception e) {
-            this.mensaje="Error al Insertar";
+            e.printStackTrace();
+            this.msj("Error al insertar historial");
         }
-        FacesMessage msg = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msg);
     }
-    
     public void consultarId_historiales(Historiales historiales){
         try {
             this.historiales = historiales;
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al cargar historial");
         }
     }
-    
     public void actualizar(){
         try {
-            historialesFacadeLocal.create(historiales);
-            this.mensaje ="Actualizado Correctamente";
+            this.historialesFacadeLocal.create(this.historiales);
+            this.msj("Historialo Actualizado");
         } catch (Exception e) {
-            this.mensaje="Error al actualizar";
+            e.printStackTrace();
+            this.msj("Error al actualizar historial");
         }
-        
-        FacesMessage msg = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msg);
-    
     }
-    
     public void eliminar_historiales(Historiales historiales){
-    
         try {
-            historialesFacadeLocal.remove(historiales);
-        this.mensaje ="Eliminado Correctamente";
+            this.historialesFacadeLocal.remove(this.historiales);
+            this.msj("Se ha eliminado el historial");
         } catch (Exception e) {
-            this.mensaje="Error al Eliminar";
+            e.printStackTrace();
+            this.msj("Error al eliminar el historial");
         }
-        FacesMessage msg = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msg);
-        
     }
-    
     public void limpiar(){
-    this.historiales = new Historiales();
-    this.historiales.setIdHistorial(0);
+        this.historiales = new Historiales();
+        this.vehiculos = new Vehiculos();
+        this.extranjeros = new Extranjeros();
+        this.historiales.setIdHistorial(0);
     }
-    
 }

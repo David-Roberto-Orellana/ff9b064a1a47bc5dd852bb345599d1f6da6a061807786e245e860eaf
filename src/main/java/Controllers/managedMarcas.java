@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controllers;
-
 import EJB.MarcasFacadeLocal;
 import Entity.Marcas;
 import java.io.Serializable;
@@ -12,100 +6,81 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-
 /**
  *
  * @author azucena.rivasusam
  */
 @Named(value = "managedMarcas")
 @SessionScoped
-public class managedMarcas implements Serializable {
-
+public class managedMarcas extends zumbi implements Serializable {
     @EJB
     private MarcasFacadeLocal marcalocalEJB;
     private List<Marcas> listamarcas;
     private Marcas marcas;
-    String mensaje;
-
     public List<Marcas> getListamarcas() {
         this.listamarcas = this.marcalocalEJB.findAll();
-        return listamarcas;
+        return this.listamarcas;
     }
-
     public void setListamarcas(List<Marcas> listamarcas) {
         this.listamarcas = listamarcas;
     }
-
     public Marcas getMarcas() {
-        return marcas;
+        return this.marcas;
     }
-
     public void setMarcas(Marcas marcas) {
         this.marcas = marcas;
     }
-
     @PostConstruct
     public void init() {
-        marcas = new Marcas();
-         this.marcas.setIdMarca(0);
+        this.limpiar_marcas();
     }
-
     public void consultar_marca() {
         try {
-            listamarcas = marcalocalEJB.findAll();
+            this.listamarcas = marcalocalEJB.findAll();
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("No se completo la carga de marcas");
         }
-
     }
-
     public void insertar_marca() {
         try {
-            marcalocalEJB.create(marcas);
-            mensaje = "Datos Insertados con Exito";
+            this.marcalocalEJB.create(this.marcas);
+            this.msj("Marca insertada");
         } catch (Exception e) {
-            mensaje = "Error al Insetar Datos";
+            e.printStackTrace();
+            this.msj("Error al insertar marca");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-
     public void consultarId_marcas(Marcas marca) {
         try {
             this.marcas = marca;
         } catch (Exception e) {
+            e.printStackTrace();
+            this.msj("Error al cargar la marca");
         }
     }
-
     public void actualizar_marca() {
         try {
-            marcalocalEJB.edit(marcas);
-            mensaje = "Datos Actualizados con Exito";
+            this.marcalocalEJB.edit(this.marcas);
+            this.msj("Marca actualizada");
         } catch (Exception e) {
-            mensaje = "Error al Actualizar Datos";
+            e.printStackTrace();
+            this.msj("Error al actualizar la marca");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-
     public void eliminar_marca(Marcas marca) {
         this.marcas = marca;
         try {
-            marcalocalEJB.remove(marcas);
-            mensaje = "Datos Eliminados con Exito";
+            this.marcalocalEJB.remove(this.marcas);
+            this.msj("Marca eliminada");
         } catch (Exception e) {
-            mensaje = "Error al Eliminar Datos";
+            e.printStackTrace();
+            this.msj("Error al eliminar marca");
         }
-        FacesMessage msj = new FacesMessage(this.mensaje);
-        FacesContext.getCurrentInstance().addMessage(mensaje, msj);
     }
-
     public void limpiar_marcas() {
         this.marcas = new Marcas();
         this.marcas.setIdMarca(0);
-
     }
 }
