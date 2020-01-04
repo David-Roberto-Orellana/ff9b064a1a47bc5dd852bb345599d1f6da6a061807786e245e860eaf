@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Partes</title>
+        <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
+    </h:head>
+    <h:body onload="iniciar();">
+        <silvia>root</silvia>
+        <p:growl id="msj"/>
+        <div class="nav">
+            <label>Partes</label>
+            <h:form id="da">
+                <p:commandButton value="Nuevo" oncomplete="PF('tip').show()" onclick="crearCampos();booleans(0,0);"/>
+            </h:form>
+        </div>
+        <p:dialog widgetVar="tip" modal="true" showEffect="puff" hideEffect="puff" resizable="false">
+            <p:ajax event="close" listener="#{managedPartes.limpiar()}" update=":tp" />
+            <h:form id="tp">
+                <formulario mensaje="No se han completado todos los campos de partes" tipo="rojo">
+                    <validacion mensaje="Debe ingresar una parte de vehiculo" invisible="false">
+                        <nombre valor="Nombre"></nombre>
+                        <parametros>campo;5;50</parametros>
+                        <p:inputText  value="#{managedPartes.partes.nombre}" />
+                    </validacion>
+                    <validacion mensaje="Debe ingresar un funcionamiento" invisible="false">
+                        <nombre valor="funcionamiento"></nombre>
+                        <parametros>campo;15;100</parametros>
+                       <p:inputText value="#{managedPartes.partes.funcionamiento}" />
+                    </validacion>
+                    <validacion mensaje="Debe ingresar un tipo" invisible="false">
+                        <nombre valor="Tipo"></nombre>
+                        <parametros>select;;</parametros>
+                        <p:selectOneMenu value="#{managedPartes.partes.tipo}">
+                            <f:selectItem itemLabel="Mecanica" itemValue="1" />
+                            <f:selectItem itemLabel="Electrica" itemValue="2" />
+                            <f:selectItem itemLabel="Tapiceria" itemValue="3" />
+                        </p:selectOneMenu>
+                        <br />
+                    </validacion>
+                    <confirmar click="nuevo_editar" color="verde">Guardar cambios</confirmar>
+                </formulario>
+                <p:commandButton actionListener="#{managedPartes.insertar_parte()}"
+                                 rendered="#{managedPartes.partes.idParte == 0}"
+                                 update=":Datos tp :msj" oncomplete="PF('tip').hide()" 
+                                 styleClass="rendereds" />
+                <p:commandButton actionListener="#{managedPartes.actualizar_parte()}"
+                                 rendered="#{managedPartes.partes.idParte != 0}"
+                                 update=":Datos tp :msj" oncomplete="PF('tip').hide()" 
+                                 styleClass="rendereds" />
+                <br /><br />
+            </h:form>
+        </p:dialog>
+        <div class="menu">
+            <ui:include src="menu.xhtml"/>
+        </div>
+        <div class="contenido">
+            <h:form id="Datos">
+                <p:dataTable value="#{managedPartes.listaPartes}" var="p">
+                    <p:column headerText="#">
+                        <eliminar>#{p.nombre}</eliminar>
+                        <h:outputText value="#{p.idParte}"/>
+                    </p:column>
+                    <p:column headerText="nombre">
+                        <h:outputText value="#{p.nombre}"/>
+                    </p:column>
+                    <p:column headerText="funcionamiento">
+                        <p:commandButton value="" styleClass="btnVer" 
+                                onclick="ver('#{p.nombre}::#{p.funcionamiento}');"/>
+                    </p:column>
+                    <p:column headerText="Tipo">
+                        <h:outputText value="#{p.tipo}" styleClass="tipoParte" />
+                    </p:column>
+                    <p:column headerText="Opciones">
+                        <p:commandButton value="" actionListener="#{managedPartes.consultarId_partes(p)}"
+                                update=":tp" oncomplete="PF('tip').show()" styleClass="btnEditar" 
+                                onclick="crearCampos();booleans(0,1);"/>
+                        <p:commandButton value="" actionListener="#{managedPartes.eliminar_parte(p)}"
+                                update=":Datos :msj" styleClass="btnEliminar" type="button" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </h:body>
+    <script src="../js/zumbi.js" type="text/javascript"></script>
+</html>

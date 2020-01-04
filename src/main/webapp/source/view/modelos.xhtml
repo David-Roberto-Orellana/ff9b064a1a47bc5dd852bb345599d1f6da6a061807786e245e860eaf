@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Modelos</title>
+        <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
+    </h:head>
+    <h:body onload="iniciar();">
+        <silvia>root</silvia>
+        <p:growl id="msj"/>
+        <div class="nav">
+            <label>Modelos</label>
+            <h:form id="da">
+                <p:commandButton value="Nuevo" oncomplete="PF('tip').show()" onclick="crearCampos();booleans(0,0);"/>
+            </h:form>
+        </div>
+        <p:dialog widgetVar="tip" modal="true" showEffect="puff" hideEffect="puff" resizable="false">
+            <p:ajax event="close" listener="#{managedModelos.limpiar_Modelos()}" update=":tp" />
+            <h:form id="tp">
+                <formulario mensaje="No se han completado todos los campos de modelo" tipo="rojo">
+                    <validacion mensaje="Debe ingresar el nombre del modelo" invisible="false">
+                        <nombre valor="Nombre del modelo"></nombre>
+                        <parametros>texto;3;50</parametros>
+                        <p:inputText value="#{managedModelos.modelos.nombre}" />
+                    </validacion>
+                    <validacion mensaje="Debe ingresar un Año" invisible="false">
+                        <nombre valor="Año de creacion"></nombre>
+                        <parametros>entero;1990;2020</parametros>
+                        <p:inputText value="#{managedModelos.modelos.anio}" />
+                    </validacion>
+                    <validacion invisible="false">
+                        <nombre valor="Nombre de marca"></nombre>
+                        <parametros>select;;</parametros>
+                        <p:selectOneMenu value="#{managedModelos.marcas.idMarca}">
+                            <f:selectItems value="#{managedMarcas.listamarcas}" var="ma" 
+                                           itemLabel="#{ma.nombre}" itemValue="#{ma.idMarca}"/>
+                        </p:selectOneMenu>
+                        <br />
+                    </validacion>
+                    <confirmar click="nuevo_editar" color="verde">Guardar cambios</confirmar>
+                </formulario>
+                <p:commandButton actionListener="#{managedModelos.insertar_modelos()}"
+                                 rendered="#{managedModelos.modelos.idModelo == 0}"
+                                 update=":Datos tp :msj" oncomplete="PF('tip').hide()"
+                                 styleClass="rendereds" />
+                <p:commandButton actionListener="#{managedModelos.actualizar_modelos()}"
+                                 rendered="#{managedModelos.modelos.idModelo != 0}"
+                                 update=":Datos tp :msj" oncomplete="PF('tip').hide()"
+                                 styleClass="rendereds" />
+                <br /><br />
+            </h:form>
+        </p:dialog>
+        <div class="menu">
+            <ui:include src="menu.xhtml"/>
+        </div>
+        <div class="contenido">
+            <h:form id="Datos">
+                <p:dataTable value="#{managedModelos.listaModelos}" var="mo">
+                    <p:column headerText="#">
+                        <eliminar>#{mo.nombre}</eliminar>
+                        <h:outputText value="#{mo.idModelo}"/>
+                    </p:column>
+                    <p:column headerText="Modelo">
+                        <h:outputText value="#{mo.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Año">
+                        <h:outputText value="#{mo.anio}"/>
+                    </p:column>
+                    <p:column headerText="Marca">
+                        <h:outputText value="#{mo.idMarca.nombre}" />
+                    </p:column>
+                    <p:column headerText="Opciones">
+                        <p:commandButton value="" actionListener="#{managedModelos.consultarID_modelos(mo)}"
+                                         update=":tp" oncomplete="PF('tip').show()" styleClass="btnEditar"
+                                         onclick="crearCampos();booleans(0,1);" />
+                        <p:commandButton value="" actionListener="#{managedModelos.eliminar_modelos(mo)}"
+                                         update=":Datos :msj" styleClass="btnEliminar" type="button" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </h:body>
+    <script src="../js/zumbi.js" type="text/javascript"></script>
+</html>
