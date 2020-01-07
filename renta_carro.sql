@@ -25,6 +25,8 @@ create table clientes(
 		on delete cascade on update cascade
 )Engine InnoDB;
 
+select c.id_clientes,c.nombre,c.apellido,c.email,c.dui,c.nit,c.fecha_nacimiento,c.telefono,c.icono,c.seguridad,l.id_licencia,l.nombre from clientes c inner join licencias l on c.id_licencia = l.id_licencia;
+
 create table extranjeros(
 	id_extranjero int not null primary key,
     extranjero int not null,/* 1=Si, 0=No */
@@ -166,11 +168,30 @@ insert into partes (nombre, funcionamiento, tipo) values
 	("Solenoide", "Hacer algo en el motor", 1),
     ("Llantas", "Dar viento al motor y si se pone el aire tira vientesito", 1),
     ("Intermitentes", "Sirve para encender y apagar ambas vias del carro", 2);
-
-insert into reparaciones(fecha_ingreso, descripcion, id_vehiculo, id_parte) values
-	("10-12-2019", "No enciende las intermitentes", 2, 3);
     
 insert into usuarios(nombre, email, direccion, seguridad, tipo) values
 	("Silvia Andrea Estupinian Ungo", "silviaungo@gmail.com", "El salvador san salvador en mijicanos", "carlitos", 1),
     ("Eulalio Cornejo Emerson Montes", "eulaliooilalue@gmail.com", "UTEC adentro de la USAM del rosario", "hola123", 2),
     ("Azucena del Carmen Usaid Campos", "azualmuerzo@gmail.com", "En el planeta tierra, cerca del sol", "azuprovecho", 3);
+    
+delimiter $
+	create trigger q after insert on reparaciones
+    for each row
+    begin
+    update vehiculos set estado = 1 where id_vehiculo = new.id_vehiculo;
+    end $
+delimiter ;
+
+delimiter $
+	create trigger w after delete on reparaciones
+    for each row
+    begin
+    update vehiculos set estado = 0 where id_vehiculo = old.id_vehiculo;
+    end $
+delimiter ;
+
+insert into reparaciones(fecha_ingreso, descripcion, id_vehiculo, id_parte) values
+	("10-12-2019", "No enciende las intermitentes", 2, 3);
+
+insert into clientes (nombre, apellido, email, dui, nit, fecha_nacimiento, telefono, icono, seguridad, id_licencia)	values
+	("Azucena Rivas", "Azualmuerzo y Servicio", "azucena@almuerzo.com", "05364410-4", "6546-789456-369-1", "27-02-1994", "7899-6955", 7, "qwe123asd", 3);
